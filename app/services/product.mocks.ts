@@ -35,13 +35,18 @@ export const productHandlers = [
 
 			await delay()
 
+			//  Submit form with the name field set to "Error" to trigger a 500 response from the mock server
+			if (productPayload.name === 'Error') {
+				return new HttpResponse(null, { status: 500 })
+			}
+
 			if (!productPayload) {
 				return new HttpResponse(null, { status: 400 })
 			}
 			const newId = uuid()
 			const newProduct = { id: newId, ...productPayload }
 			products.push(newProduct)
-			return HttpResponse.json(newProduct)
+			return HttpResponse.json(newProduct, { status: 201 })
 		},
 	),
 ]
