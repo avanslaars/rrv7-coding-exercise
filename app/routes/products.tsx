@@ -1,14 +1,16 @@
-import { useEffect, useRef } from 'react'
-import { data, Form } from 'react-router'
+import { type ActionFunctionArgs, type LoaderFunctionArgs, Link } from 'react-router'
 import { z } from 'zod'
-import { createProduct, getProducts } from '~/services/product'
-import { productListSchema, type Product } from '~/services/product.types'
+import { getProducts } from '~/services'
+import { productListSchema } from '~/services/types'
 
 export const ErrorBoundary = ({ error }: { error: Error }) => {
 	return (
-		<div>
-			<h2>Error</h2>
+		<div className="border-2 border-red-300 rounded-lg max-w-72 p-4">
+			<h2 className="text-red-500">Error</h2>
 			<p>{error.message}</p>
+			<Link to="/products" className="underline text-sky-400 font-semibold">
+				Try Again
+			</Link>
 		</div>
 	)
 }
@@ -17,48 +19,18 @@ const loaderDataSchema = z.object({
 	products: productListSchema,
 })
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const productResponse = await getProducts()
 
 	return { products: productResponse.data }
 }
 
-// TODO: Convert this to a placeholder for dev to populate
-const actionDataSchema = z.object({
-	success: z.boolean(),
-	error: z.string().optional(),
-})
+// TODO: Update this and apply it as needed
+const actionDataSchema = z.object({})
 
-// TODO: Convert this to a placeholder for dev to populate
-export const action = async ({ request }: { request: Request }) => {
-	// Read the form data
-	const formData = await request.formData()
-	const name = formData.get('name')
-	const price = formData.get('price')
-
-	// Validate the form data
-
-	if (
-		typeof name !== 'string' ||
-		typeof price !== 'string' ||
-		name.trim() === '' ||
-		isNaN(parseFloat(price))
-	) {
-		return { error: 'Invalid form data' }
-	}
-
-	console.log('Adding product:', { name, price: parseFloat(price) })
-
-	try {
-		const updateResponse = await createProduct({ name, price: parseFloat(price) })
-		if (updateResponse.status === 201) {
-			return { success: true }
-		}
-		return { success: false }
-	} catch (error) {
-		console.error('Error adding product:', error)
-		return { error: 'Failed to add product' }
-	}
+export const action = async ({ request }: ActionFunctionArgs) => {
+	return null
+	// TODO: Implement the action logic here
 }
 
 const productsPropsSchema = z.object({
@@ -70,40 +42,34 @@ type ProductsProps = z.infer<typeof productsPropsSchema>
 
 export default function Products({ loaderData, actionData }: ProductsProps) {
 	const { products } = loaderData
-	const formRef = useRef<HTMLFormElement>(null)
-	useEffect(() => {
-		if (actionData?.success) {
-			formRef.current?.reset()
-		}
-	}, [actionData])
 
 	return (
 		<div>
 			<h2>Products</h2>
-			<Form method="post" ref={formRef}>
-				<input type="text" name="name" placeholder="Product Name" />
-				<input type="text" name="price" placeholder="Product Price" />
-				<button type="submit">Add Product</button>
-			</Form>
-			{actionData?.error ? <p style={{ color: 'red' }}>{actionData.error}</p> : null}
-			<table>
+			{/* TODO: Implement the search form here */}
+			<table className="divide-y divide-gray-300 border border-sky-200 rounded-lg border-separate border-spacing-0 min-w-96">
 				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Price</th>
+					<tr className="divide-x-2">
+						<th className="p-1 text-left border-b border-sky-200">Name</th>
+						<th className="p-1 text-left border-b border-sky-200">Price</th>
 					</tr>
 				</thead>
 				<tbody>
 					{products.map((product) => (
-						<tr key={product.id}>
-							<td>{product.id}</td>
-							<td>{product.name}</td>
-							<td>{product.price}</td>
+						<tr key={product.id} className="divide-x-2 group odd:bg-slate-900">
+							<td className="p-1 border-b border-sky-200 group-last:border-b-0 group-last:rounded-bl-lg">
+								{product.name}
+							</td>
+							<td className="p-1 border-b border-sky-200 group-last:border-b-0 group-last:rounded-br-lg">
+								{product.price}
+							</td>
 						</tr>
 					))}
 				</tbody>
 			</table>
+
+			<h3 className="mt-4">Add New Product</h3>
+			{/* TODO: Implement the add product form here*/}
 		</div>
 	)
 }

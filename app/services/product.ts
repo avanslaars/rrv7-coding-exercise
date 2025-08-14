@@ -6,9 +6,11 @@ import {
 	newProductPayloadSchema,
 } from './product.types'
 
-export async function getProducts() {
+export async function getProducts(search?: string) {
 	try {
-		const response = await axios.get<ProductList>('http://local.dev/products')
+		const response = await axios.get<ProductList>(
+			`http://local.dev/products${search ? `?search=${search}` : ''}`,
+		)
 		return response
 	} catch (error) {
 		console.error('Error fetching products:', error)
