@@ -41,3 +41,15 @@ export async function createProduct(productData: NewProductPayload) {
 		throw error
 	}
 }
+
+export async function deleteProduct(id: string) {
+	try {
+		const response = await axios.delete<AxiosResponse<Product>>(
+			`http://local.dev/products/${id}`,
+		)
+		return response
+	} catch (error) {
+		console.error('Error deleting product:', error)
+		throw error
+	}
+}

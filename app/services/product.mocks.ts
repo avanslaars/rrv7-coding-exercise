@@ -1,5 +1,6 @@
 import { delay, http, HttpResponse } from 'msw'
 import { v4 as uuid } from 'uuid'
+import { head } from 'es-toolkit'
 import {
 	type NewProductPayload,
 	type Product,
@@ -144,6 +145,22 @@ export const productHandlers = [
 			const newProduct = { id: newId, ...productPayload }
 			products.push(newProduct)
 			return HttpResponse.json(newProduct, { status: 201 })
+		},
+	),
+	http.delete<any, { id: string }, Product>(
+		'http://local.dev/products/:id',
+		async ({ params }) => {
+			const { id } = params
+			const productIndex = products.findIndex((p) => p.id === id)
+
+			await delay()
+
+			if (productIndex === -1) {
+				return new HttpResponse(null, { status: 404 })
+			}
+
+			const deletedProduct = head(products.splice(productIndex, 1))
+			return HttpResponse.json(deletedProduct)
 		},
 	),
 ]
