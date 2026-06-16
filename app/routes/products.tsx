@@ -1,7 +1,6 @@
-import { type ActionFunctionArgs, type LoaderFunctionArgs, Link } from 'react-router'
-import { z } from 'zod'
+import type { Route } from './+types/products'
+import { Link } from 'react-router'
 import { getProducts } from '~/services'
-import { productListSchema } from '~/services/types'
 
 export const ErrorBoundary = ({ error }: { error: Error }) => {
 	return (
@@ -15,32 +14,18 @@ export const ErrorBoundary = ({ error }: { error: Error }) => {
 	)
 }
 
-const loaderDataSchema = z.object({
-	products: productListSchema,
-})
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
 	const productResponse = await getProducts()
 
 	return { products: productResponse.data }
 }
 
-// TODO: Update this and apply it as needed
-const actionDataSchema = z.object({})
-
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const action = async ({ request }: Route.ActionArgs) => {
 	return null
 	// TODO: Implement the action logic here
 }
 
-const productsPropsSchema = z.object({
-	loaderData: loaderDataSchema,
-	actionData: actionDataSchema.nullable(),
-})
-
-type ProductsProps = z.infer<typeof productsPropsSchema>
-
-export default function Products({ loaderData, actionData }: ProductsProps) {
+export default function Products({ loaderData, actionData }: Route.ComponentProps) {
 	const { products } = loaderData
 
 	return (

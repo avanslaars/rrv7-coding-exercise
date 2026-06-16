@@ -33,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body className="p-2">
-				<h1>Sample App</h1>
+				<h1 className="py-2">Coding Exercise App</h1>
 				<main>{children}</main>
 				<ScrollRestoration />
 				<Scripts />
