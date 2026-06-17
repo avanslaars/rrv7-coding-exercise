@@ -48,6 +48,7 @@ The goal of this task is to create a search form on the page. When submitted, th
 - Handle submission of the search form
 - Wire up the relevant code to update the data being fetched
 - Prevent searching with an empty search input
+- Make sure when a search has been applied, the search term is displayed in the input
 - If empty search submit is attempted show a message in the UI that communicates the issue
 - Add UI for a "clear search" capability & wire that up to show the full dataset again
 - **Hint**: The search should be reflected in the URL for bookmarking and sharing purposes
@@ -56,7 +57,7 @@ The goal of this task is to create a search form on the page. When submitted, th
 
 The goal of this task is to wire up the UI to make a back end service call that deletes a product. The service function already exists as `deleteProduct` in `app/services/product.ts` and is setup to manipulate the mock data in memory so you can reload to start with fresh data while working through the UI code.
 
-- Add a button for each row
+- Add a delete button for each row
 - Handle the button click
 - Wire up the relevant code to make the delete happen
 - Ensure the UI reflects the removed item
@@ -69,7 +70,8 @@ The goal of this task is to create a second form on the page to add a new produc
 - Handle form submission and related service call (the `createProduct` function and related mock will update the in-memory mocks is successful)
 - Ensure the form has a cancel button that will clear the form
 - Prevent calling the `createProduct` function with an invalid payload
-- If an form is invalid, show a message on the page indicating that the form is invalid
+- If the form is invalid, show a message on the page indicating that the form is invalid
+- Ensure that upon a succesful submission, form fields are reset for the next submission
 
 ### Add a Product Detail Route
 
